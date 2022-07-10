@@ -1,0 +1,20 @@
+{
+  "name": "getpass-api",
+  "version": "1.0.0",
+  "description": "API back-end do projeto de banco de senhas GETPASS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node.js",
+    "gerenciador_de_senahs",
+    "controle",
+    "javascript"
+  ],
+  "author": "Davi Augusto Freitas de Azevedo",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
