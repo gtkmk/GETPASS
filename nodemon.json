@@ -6,6 +6,6 @@
         "MYSQL_HOST": "localhost",
         "MYSQL_PORT": "3306",
 
-        "JWT_KEY": "segredo"
+        "JWT_KEY": "BuildForSP80056a"
     }
 }

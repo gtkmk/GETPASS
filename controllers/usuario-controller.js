@@ -2,6 +2,8 @@ const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+
+
 exports.signUpUser = (req, res, next) => {
     mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error }) }
@@ -11,7 +13,7 @@ exports.signUpUser = (req, res, next) => {
             }else {
                 bcrypt.hash(req.body.senha, 12, (errBcrypt, hash) => {
                     if(errBcrypt) { return res.status(500).send({ error: errBcrypt}) }
-                    conn.query(`INSERT INTO usuarios (email, senha, nome, sobrenome) VALUES (?,?,?,?)`,
+                    conn.query(`INSERT INTO usuario (email, senha, nome, sobrenome) VALUES (?,?,?,?)`,
                     [req.body.email, hash, req.body.nome, req.body.sobrenome],
                     (error, results) => {
                         conn.release();
@@ -37,7 +39,7 @@ exports.signUpUser = (req, res, next) => {
 exports.login = (req, res, next) => {
     mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error }) }
-        conn.query('SELECT * FROM usuarios WHERE email = ?', [req.body.email], (error, results, fields) => {
+        conn.query('SELECT * FROM usuario WHERE email = ?', [req.body.email], (error, results, fields) => {
             conn.release();
             if (error) { return res.status(500).send({ error: error }) }
             if(results.length < 1){

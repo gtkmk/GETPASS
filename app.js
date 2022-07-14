@@ -3,13 +3,15 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-const rotaUsuario = require('./routes/user');
+const rotaUsuario = require('./routes/usuario');
+const rotaContas = require('./routes/contas')
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use('/user', rotaUsuario);
+app.use('/usuario', rotaUsuario);
+app.use('/contas', rotaContas);
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
