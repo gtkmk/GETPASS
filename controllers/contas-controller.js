@@ -1,6 +1,15 @@
 const mysql = require('../mysql').pool;
 const jwt = require('jsonwebtoken');
 
+exports.postTeste = (req, res, next) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.verify(token, process.env.JWT_KEY);
+    const user = decode.id_usuario;
+    console.log(req.file);
+    const a = req.file.path;
+
+    return res.status(201).send(a);
+}
 
 exports.getContas = (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
@@ -48,24 +57,24 @@ exports.postContas = (req, res, next) => {
         if(error){return res.status(500).send({ error: error }) }
         conn.query(
 
-            "INSERT INTO contas (id_usuario, login, senha, tipo, origem, imagem) VALUES (?,?,?,?,?)",
+            "INSERT INTO contas (id_usuario, login, senha, tipo, origem, imagem) VALUES (?,?,?,?,?,?)",
 
-            [user, req.body.email, req.body.senha, req.body.tipo, req.body.origem, req.file.path],
+            [user, req.body.login, req.body.senha, req.body.senha, req.body.origem, req.file.path],
 
             (error, result, field)=>{
                 conn.release();
                 if(error){return res.status(500).send({ error: error }) }  
                 const response = {
-                    mensagem: 'Conta inserida com sucesso',
-                    contaCriada: {
-                        id_conta: result[0].id_conta,
-                        id_usuario: result[0].id_usuario,
-                        login: result[0].login,
-                        senha: result[0].senha,
-                        tipo: result[0].tipo,                        
-                        origem: result[0].origem,
-                        imagem_produto: result[0].imagem_produto,
-                        request:{
+                    mensagem: 'Produto inserido com sucesso',
+                    produtoCriado: {
+                        id_conta: result.id_conta,
+                        id_usuario: result.id_usuario,
+                        login: req.body.login,
+                        senha: req.body.senha,
+                        tipo: req.body.tipo,
+                        origem: req.body.origem,
+                        conta_imagem: req.file.path,
+                        request: {
                             tipo: 'GET',
                             descricao: 'Retorna todas as contas',
                             url: 'http://localhost:3000/contas'
@@ -122,20 +131,21 @@ exports.patchConta = (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.verify(token, process.env.JWT_KEY);
     const user = decode.id_usuario;
+    console.log(req.file);
     mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error }) }
         conn.query(
 
-            "UPDATE contas SET login = ?, senha = ?, tipo = ?, imagem = ? WHERE id_conta = ? AND id_usuario = ?",
+            "UPDATE contas SET login = ?, senha = ?, tipo = ?, origem = ?, imagem = ? WHERE id_conta = ? AND id_usuario = ?",
 
-            [req.body.login, req.body.senha, req.body.tipo, req.file.path, req.body.id_produto, user],
+            [req.body.login, req.body.senha, req.body.tipo, req.body.origem, req.file.path, req.body.id_conta, user],
 
             (error, result, field)=>{
                 conn.release();
 
                 if(error){return res.status(500).send({ error: error }) }     
                 const response = {
-                    mensagem: 'Produto alterado com sucesso',
+                    mensagem: 'Conta alterada com sucesso',
                     conta_alterada: {
                         id_conta: result[0].id_conta,
                         id_usuario: result[0].id_usuario,

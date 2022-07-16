@@ -57,6 +57,7 @@ router.get(
 router.patch(
     '/',
     login.obrigatorio,
+    upload.single('conta_imagem'),
     ProdutosController.patchConta
 );
 
