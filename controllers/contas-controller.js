@@ -65,7 +65,7 @@ exports.postContas = (req, res, next) => {
                 conn.release();
                 if(error){return res.status(500).send({ error: error }) }  
                 const response = {
-                    mensagem: 'Produto inserido com sucesso',
+                    mensagem: 'Conta inserida com sucesso',
                     produtoCriado: {
                         id_conta: result.id_conta,
                         id_usuario: result.id_usuario,
@@ -142,32 +142,31 @@ exports.patchConta = (req, res, next) => {
 
             (error, result, field)=>{
                 conn.release();
-
-                if(error){return res.status(500).send({ error: error }) }     
+                if(error){return res.status(500).send({ error: error }) }  
                 const response = {
                     mensagem: 'Conta alterada com sucesso',
-                    conta_alterada: {
-                        id_conta: result[0].id_conta,
-                        id_usuario: result[0].id_usuario,
-                        login: result[0].login,
-                        senha: result[0].senha,
-                        tipo: result[0].tipo,
-                        imagem_produto: result[0].imagem_produto,
-                        origem: result[0].origem,
+                    produtoCriado: {
+                        id_conta: result.id_conta,
+                        id_usuario: result.id_usuario,
+                        login: req.body.login,
+                        senha: req.body.senha,
+                        tipo: req.body.tipo,
+                        origem: req.body.origem,
+                        conta_imagem: req.file.path,
                         request:{
                             tipo: 'GET',
                             descricao: 'Retorna os detalhes da conta listada',
                             url: 'http://localhost:3000/contas/' + req.body.id_conta
                         }
-                    }                    
+                    }
                 }
-                return res.status(202).send(response);
+                return res.status(201).send(response);
             }
         )
-    });
+    }); 
 };
 
-exports.deleteProduto = (req, res, next) => {
+exports.deleteConta = (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.verify(token, process.env.JWT_KEY);
     const user = decode.id_usuario;

@@ -65,7 +65,7 @@ router.patch(
 router.delete(
     '/',
     login.obrigatorio,
-    ProdutosController.deleteProduto
+    ProdutosController.deleteConta
 );
 
 module.exports = router;
