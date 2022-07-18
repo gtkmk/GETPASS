@@ -1,14 +1,114 @@
 const mysql = require('../mysql').pool;
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
-exports.postTeste = (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1];
-    const decode = jwt.verify(token, process.env.JWT_KEY);
-    const user = decode.id_usuario;
-    console.log(req.file);
-    const a = req.file.path;
+// --------------------------------------------------------------------------------------------------------------------------------------
+const security = require('../security/crypto');
 
-    return res.status(201).send(a);
+var abb = "minha senha";
+
+// function encrypt(value){
+//     const iv = Buffer.from(crypto.randomBytes(16));
+//     const cipher = crypto.createCipheriv("aes-256-cbc", key_in_bytes, iv);
+//     let encrypted = cipher.update(value);
+//     encrypted = Buffer.concat([encrypted, cipher.final()]);
+//     return `${iv.toString('hex')}:${encrypted.toString('hex')}`;
+// }
+
+// function encrypt(text){
+//         const iv = Buffer.from(crypto.randomBytes(16));
+//         const cipher = crypto.createCipheriv(process.env.CRYPTO_ALG, Buffer.from(process.env.CRYPTO_PSW), iv);
+//         let encrypted = cipher.update(text);
+//         encrypted = Buffer.concat([encrypted, cipher.final()]);
+//         return `${iv.toString('hex')}:${encrypted.toString('hex')}`;
+//     }
+
+// abb = encrypt(abb);
+// console.log(encrypt(abb))
+
+// function decrypt(text){
+//     const [iv, encrypted] = text.split(':');
+//     const ivBuffer = Buffer.from(iv, 'hex');
+//     const decipher = crypto.createDecipheriv(process.env.CRYPTO_ALG, Buffer.from(process.env.CRYPTO_PSW), ivBuffer);
+//     let content = decipher.update(Buffer.from(text, 'hex'));
+//     content = Buffer.concat([ content, decipher.final() ]);
+//     return content.toString();
+// }
+// abb = encrypt(abb);
+// acc = encrypt(abb);
+// add = decrypt(acc);
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+const PASSWORD = "Pa$$w0rd"
+
+function encrypt(text) {
+
+    let iv = crypto.randomBytes(16);
+    let salt = crypto.randomBytes(16);
+    let key = crypto.scryptSync(PASSWORD, salt, 32);
+
+    let cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
+    let encrypted = cipher.update(text, "utf8", "hex");
+    encrypted += cipher.final("hex");
+
+    return `${iv.toString("hex")}:${salt.toString("hex")}:${encrypted}`;
+
+}
+
+function decrypt(text) {
+
+    let [ivs, salts, data] = text.split(':');
+    let iv = Buffer.from(ivs, "hex");
+    let salt = Buffer.from(salts, "hex");
+    let key = crypto.scryptSync("Pa$$w0rd", salt, 32);
+
+    let decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+    let decrypted = decipher.update(data, "hex", "utf8");
+    decrypted += decipher.final("utf8");
+
+    return decrypted.toString();
+
+}
+
+abb = encrypt(abb);
+console.log(abb);
+acc = decrypt(abb)
+console.log(acc);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+exports.Teste = (req, res, next) => {
+    res.status(200).send({ mensagem: abb });
 }
 
 exports.getContas = (req, res, next) => {

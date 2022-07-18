@@ -38,6 +38,13 @@ router.get(
     ProdutosController.getContas
 );
 
+//teste
+router.get(
+    '/teste',
+    login.obrigatorio,
+    ProdutosController.Teste
+);
+
 //Insere uma conta
 router.post(
     '/',
