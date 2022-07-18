@@ -37,7 +37,7 @@ exports.getContas = async (req, res, next) => {
     const decode = jwt.verify(token, process.env.JWT_KEY);
     var user = decode.id_usuario;
     try {
-        const query = "SELECT * FROM contas WHERE id_usuario = 1;";
+        const query = "SELECT * FROM contas WHERE id_usuario = ?;";
         const result = await mysql.execute(query, [
             user
         ]);
@@ -46,11 +46,12 @@ exports.getContas = async (req, res, next) => {
             contas: result.map(conta => {
                 return {
                     id_conta: conta.id_conta,
-                    login: conta.login,
-                    senha: conta.senha,
-                    tipo: conta.tipo,
-                    origem: conta.origem,
-                    imagem: conta.imagem,
+                    login: security.decrypt(conta.login),
+                    senha: security.decrypt(conta.senha),
+                    tipo: security.decrypt(conta.tipo),
+                    origem: security.decrypt(conta.origem),
+                    imagem: security.decrypt(conta.imagem),
+                    user_id: user,
                     request: {
                         tipo: 'GET',
                         descricao: 'Retorna os detalhes da conta listada',
@@ -65,43 +66,6 @@ exports.getContas = async (req, res, next) => {
     }
 }
 
-// exports.getContas = (req, res, next) => {
-//     const token = req.headers.authorization.split(' ')[1];
-//     const decode = jwt.verify(token, process.env.JWT_KEY);
-//     const user = decode.id_usuario;
-//     mysql.getConnection((error, conn)=>{
-//         if(error){return res.status(500).send({ error: error }) }
-//         conn.query(
-//             "SELECT * FROM contas WHERE id_usuario = ?;",
-//             [user],
-//             (error, result, field)=>{
-//                 conn.release();
-//                 if(error){return res.status(500).send({ error: error }) }
-//                 const response = {
-//                     quantidade: result.length,
-//                     contas: result.map(conta => {
-//                         return{
-//                             id_conta: conta.id_conta,
-//                             login: conta.login,
-//                             senha: conta.senha,
-//                             tipo: conta.tipo,
-//                             origem: conta.origem,
-//                             imagem: conta.imagem,                            
-//                             request:{
-//                                 tipo: 'GET',
-//                                 descricao: 'Retorna os detalhes da conta listada',
-//                                 url: 'http://localhost:3000/contas/'+ conta.id_produto
-//                             }
-//                         }
-//                     })
-//                 }
-//                 return res.status(200).send(response);
-
-//             }
-//         )
-//     })
-// };
-
 exports.postContas = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.verify(token, process.env.JWT_KEY);
@@ -111,11 +75,11 @@ exports.postContas = async (req, res, next) => {
         const query = "INSERT INTO contas (id_usuario, login, senha, tipo, origem, imagem) VALUES (?,?,?,?,?,?)"
         const result = await mysql.execute(query, [
             user, 
-            req.body.login,
-            req.body.senha,
-            req.body.senha,
-            req.body.origem,
-            req.file.path
+            security.encrypt(req.body.login),
+            security.encrypt(req.body.senha),
+            security.encrypt(req.body.tipo),
+            security.encrypt(req.body.origem),
+            security.encrypt(req.file.path)
         ]);
         const response = {
             mensagem: 'Conta inserida com sucesso',
@@ -154,11 +118,11 @@ exports.getSingleConta = async (req, res, next) => {
             conta: {
                 id_conta: result[0].id_conta,
                 id_usuario: result[0].id_usuario,
-                login: result[0].login,
-                senha: result[0].senha,
-                tipo: result[0].tipo,                        
-                origem: result[0].origem,
-                imagem_produto: result[0].imagem_produto,
+                login: security.decrypt(result[0].login),
+                senha: security.decrypt(result[0].senha),
+                tipo: security.decrypt(result[0].tipo),
+                origem: security.decrypt(result[0].origem),
+                imagem_produto: security.decrypt(result[0].imagem),
                 request:{
                     tipo: 'GET',
                     descricao: 'Retorna todas as contas',
@@ -180,11 +144,11 @@ exports.patchConta = async (req, res, next) => {
         console.log(req.file);
         const query = "UPDATE contas SET login = ?, senha = ?, tipo = ?, origem = ?, imagem = ? WHERE id_conta = ? AND id_usuario = ?"
         await mysql.execute(query, [
-            req.body.login,
-            req.body.senha,
-            req.body.tipo,
-            req.body.origem,
-            req.file.path,
+            security.encrypt(req.body.login),
+            security.encrypt(req.body.senha),
+            security.encrypt(req.body.tipo),
+            security.encrypt(req.body.origem),
+            security.encrypt(req.file.path),
             req.body.id_conta,
             user
         ]);

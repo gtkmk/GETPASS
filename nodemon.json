@@ -6,6 +6,10 @@
         "MYSQL_HOST": "localhost",
         "MYSQL_PORT": "3306",
 
-        "JWT_KEY": "BuildForSP80056a"
+        "JWT_KEY": "BuildForSP80056a",
+
+        "CRYPTO_ALG": "aes-256-cbc",
+        "CRYPTO_PSW": "9R0vA#1@sk$KDm#3@LaN1TA93cgRDpdc"
+        
     }
 }
