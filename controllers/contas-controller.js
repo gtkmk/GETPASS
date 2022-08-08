@@ -3,35 +3,6 @@ const jwt = require('jsonwebtoken');
 const security = require('../security/crypto');
 const { query } = require('express');
 
-// --------------------------------------------------------------------------------------------------------------------------------------
-
-
-// const token = req.headers.authorization.split(' ')[1];
-// const decode = jwt.verify(token, process.env.JWT_KEY);
-// var user = decode.id_usuario;
-// return user;
-
-
-
-var abb = "minha senha";
-
-abb = security.encrypt(abb);
-console.log(abb);
-acc = security.decrypt(abb);
-console.log(acc);
-
-
-
-
-exports.Teste = (req, res, next) => {   
-    var abb = "minha senha"; 
-    const user1 = userAuthorization.usuario;
-    const isso = userID();
-    res.status(200).send({ mensagem: 
-        user1
-    });
-}
-
 exports.getContas = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.verify(token, process.env.JWT_KEY);
@@ -65,6 +36,30 @@ exports.getContas = async (req, res, next) => {
         return res.status(500).send({ error: error });
     }
 }
+
+exports.teste = async (req, res, next) => {
+    try {
+        const response = {
+            id_conta: "001",
+            login: 'login@teste.com',
+            senha: 'senha123',
+            tipo: 'Ecommerce',
+            origem: 'Amazon',
+            imagem: 'minhaimagemlogo.png',
+            user_id: 2,
+            request: {
+                tipo: 'GET',
+                descricao: 'Retorna os detalhes da conta listada',
+                url: 'http://localhost:3000/contas/' + 1
+            }
+        }
+        return res.status(200).send(response);
+    } catch (error) {
+        return res.status(500).send({ error: error });
+    }
+}
+
+
 
 exports.postContas = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];

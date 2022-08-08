@@ -2,8 +2,6 @@ const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-
-
 exports.signUpUser = (req, res, next) => {
     mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error }) }

@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const login = require('../middleware/login');
 
-const ProdutosController = require('../controllers/contas-controller');
+const ContasController = require('../controllers/contas-controller');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
@@ -28,21 +28,14 @@ const upload = multer({
     limits: {
         fileSize: 1024 * 1024 * 8
     },
-    fileFielter: fileFielter
+    fileFielter: fileFielter 
 });
 
 //Retorna todas as contas
 router.get(
     '/',
     login.obrigatorio,
-    ProdutosController.getContas
-);
-
-//teste
-router.get(
-    '/teste',
-    login.obrigatorio,
-    ProdutosController.Teste
+    ContasController.getContas
 );
 
 //Insere uma conta
@@ -50,14 +43,14 @@ router.post(
     '/',
     login.obrigatorio,
     upload.single('conta_imagem'),
-    ProdutosController.postContas
+    ContasController.postContas
 );
 
 //Retorna sobre uma conta
 router.get(
     '/:id_conta',
     login.obrigatorio,
-    ProdutosController.getSingleConta
+    ContasController.getSingleConta
 );
 
 //Altera uma conta
@@ -65,14 +58,14 @@ router.patch(
     '/',
     login.obrigatorio,
     upload.single('conta_imagem'),
-    ProdutosController.patchConta
+    ContasController.patchConta
 );
 
 //Deleta uma conta
 router.delete(
     '/',
     login.obrigatorio,
-    ProdutosController.deleteConta
+    ContasController.deleteConta
 );
 
 module.exports = router;
