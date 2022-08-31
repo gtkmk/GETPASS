@@ -8,3 +8,4 @@ Possui um CRUD e suas rotas, login utilizando JWT e criptografia em tudo que sal
 
 
 Por enquanto é isso. Espero poder aperfeiçoar esse projeto no futuro e fazer bom uso dele.
+Feito por: Davi Augusto
