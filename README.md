@@ -5,3 +5,5 @@ Feito com o intuito de ser usado apenas por mim mesmo, esse é um projeto pessoa
 ## Funcionalidades?
 
 Possui um CRUD e suas rotas, login utilizando JWT e criptografia em tudo que salvo no BD.
+
+#Por enquanto é isso. Espero poder aperfeiçoar esse projeto no futuro e fazer bom uso dele.
